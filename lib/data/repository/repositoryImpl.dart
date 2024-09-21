@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:social_media_app/data/model/photos_model/photos_model.dart';
 import 'package:social_media_app/data/model/todo_model/todo_model.dart';
 
 import '../../domain/repository/repository.dart';
@@ -15,7 +16,7 @@ class RepositoryImpl implements Repository {
   Future<List<TodoModel>> getAllTodos() async {
     final response = await _apiClient.get("todos");
     if (response!.statusCode == 200) {
-      List jsonData = json.decode(response!.body);
+      List jsonData = json.decode(response.body);
       //Logger().i(jsonData);
       return jsonData.map((todo) => TodoModel.fromJson(todo)).toList();
     } else {
@@ -27,4 +28,18 @@ class RepositoryImpl implements Repository {
   Future<List<UserModel>> getAllUsers() {
     return _apiClient.getUsersFromApi();
   }
+
+  @override
+  Future<List<PhotosModel>> getAllPhotos() async {
+    final response = await _apiClient.get("photos"); // API endpoint'i burada belirtiliyor
+
+    if (response!.statusCode == 200) {
+      List jsonData = json.decode(response.body);
+      return jsonData.map((photo) => PhotosModel.fromJson(photo)).toList();
+    } else {
+      throw Exception('Failed to load photos');
+    }
+  }
+
+
 }
